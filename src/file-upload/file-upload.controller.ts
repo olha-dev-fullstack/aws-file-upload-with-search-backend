@@ -6,8 +6,23 @@ export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post()
-  getUploadUrl(@Body() fileData: { filename: string; mimetype: string }) {
+  async getUploadUrl(
+    @Body()
+    {
+      userEmail,
+      fileData,
+    }: {
+      userEmail: string;
+      fileData: { filename: string; mimetype: string };
+    },
+  ) {
     const { filename, mimetype } = fileData;
-    return this.fileUploadService.generateUploadUrl(filename, mimetype);
+    const s3FilePath = `files/${userEmail}/${Date.now()}_${filename}`;
+    const generatedUrl = await this.fileUploadService.generateUploadUrl(
+      s3FilePath,
+      mimetype,
+    );
+    await this.fileUploadService.uploadToDb(userEmail, filename, s3FilePath);
+    return generatedUrl;
   }
 }

@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FileUploadController } from './file-upload/file-upload.controller';
-import { FileUploadService } from './file-upload/file-upload.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     FileUploadModule,
   ],
-  controllers: [AppController, FileUploadController],
-  providers: [AppService, FileUploadService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
