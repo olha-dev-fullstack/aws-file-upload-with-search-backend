@@ -16,6 +16,8 @@ export class FileUploadService {
     this.awsS3Bucket = new AWS.S3({
       accessKeyId: this.configService.get<string>('S3_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.get<string>('S3_SECRET_ACCESS_KEY'),
+      region: 'eu-central-1',
+      // region: 'us-east-1',
     });
   }
   async getS3Url(fileName, bucket, mimetype) {
@@ -23,7 +25,7 @@ export class FileUploadService {
       Bucket: bucket,
       Key: String(fileName),
       ContentType: mimetype,
-      Expires: 900000,
+      Expires: 900,
     };
     try {
       const s3Response = await this.awsS3Bucket.getSignedUrlPromise(

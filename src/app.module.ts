@@ -3,6 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { FileService } from './services/file.service';
+import { FileController } from './controllers/file.controller';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -12,7 +15,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     }),
     FileUploadModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, FileController],
+  providers: [AppService, FileService, PrismaService],
 })
 export class AppModule {}
