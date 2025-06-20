@@ -7,6 +7,7 @@ import {
   FileService,
   SupportedExtensions,
 } from 'src/services/file.service';
+import { OpenSearchService } from 'src/services/opensearch.service';
 
 type SqsMessageObj = {
   Records: {
@@ -20,14 +21,21 @@ type SqsMessageObj = {
 
 @Injectable()
 export class ConsumerService {
-  constructor(private readonly fileService: FileService) {}
+  constructor(
+    private readonly fileService: FileService,
+    private readonly opensearchService: OpenSearchService,
+  ) {}
 
   @SqsMessageHandler(config.sqsQueueName, false)
   async handleMessage(message: AWS.SQS.Message) {
     try {
       const obj: SqsMessageObj = JSON.parse(message.Body);
       const s3FileKey = obj.Records[0].s3.object.key;
-      console.log(s3FileKey);
+
+      const fileFromDb = await this.fileService.findFileByS3Path(s3FileKey);
+      if (!fileFromDb) {
+        throw new Error("File doesn't exist");
+      }
 
       // load file from s3
       const fileFromS3 = await this.fileService.downloadFileFromS3(s3FileKey);
@@ -52,7 +60,13 @@ export class ConsumerService {
 
       // test with .doc
       // Load text to OpenSearch
-      
+      await this.opensearchService.indexDocument({
+        id: fileFromDb.id,
+        filename: fileFromDb.filename,
+        text: fileText,
+        userEmail: fileFromDb.userEmail,
+        uploadedAt: fileFromDb.uploadedAt.toISOString(),
+      });
       // console.log(data);
     } catch (e) {
       console.log('error handling message', e);

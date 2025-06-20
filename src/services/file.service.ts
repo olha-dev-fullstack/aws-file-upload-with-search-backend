@@ -1,10 +1,10 @@
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
-import Stream from 'node:stream';
-import { PrismaService } from 'src/prisma/prisma.service';
-import * as pdf from 'pdf-parse';
 import * as mammoth from 'mammoth';
+import Stream from 'node:stream';
+import * as pdf from 'pdf-parse';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 export type SupportedExtensions = '.pdf' | '.docx';
 export type FileParseFn = (buffer: Buffer) => Promise<string>;
@@ -30,6 +30,15 @@ export class FileService {
       orderBy: { uploadedAt: 'desc' },
     });
     return files;
+  }
+
+  async findFileByS3Path(s3Key: string) {
+    const file = await this.prisma.document.findFirst({
+      where: {
+        s3Url: s3Key,
+      },
+    });
+    return file;
   }
 
   async streamToBuffer(readableStream) {

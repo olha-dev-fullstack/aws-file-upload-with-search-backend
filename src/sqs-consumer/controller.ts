@@ -7,7 +7,7 @@ export class TestController {
   @Post('/test/sqs')
   async test() {
     const message = {
-      Body: '{"Records":[{"s3":{"object":{"key":"files/olha.shevel.dev@gmail.com/1750410939287_test.doc"}}}]}',
+      Body: '{"Records":[{"s3":{"object":{"key":"files/olha.shevel.dev@gmail.com/1750326759747_Developer Requirements En.pdf"}}}]}',
     };
 
     await this.service.handleMessage(message);

@@ -24,6 +24,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@opensearch-project/opensearch": "^3.5.1",
     "@prisma/client": "^6.9.0",
     "@ssut/nestjs-sqs": "^3.0.1",
     "aws-sdk": "^2.1692.0",
