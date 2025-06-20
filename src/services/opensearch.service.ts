@@ -24,7 +24,6 @@ export class OpenSearchService implements OnModuleInit {
     const indexExists = await this.client.indices.exists({
       index: 'documents',
     });
-    console.log(indexExists);
 
     if (!indexExists.body) {
       await this.client.indices.create({

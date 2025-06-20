@@ -38,6 +38,8 @@ export class FileService {
         s3Url: s3Key,
       },
     });
+    console.log(file);
+    
     return file;
   }
 

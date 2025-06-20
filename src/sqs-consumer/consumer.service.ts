@@ -30,7 +30,9 @@ export class ConsumerService {
   async handleMessage(message: AWS.SQS.Message) {
     try {
       const obj: SqsMessageObj = JSON.parse(message.Body);
-      const s3FileKey = obj.Records[0].s3.object.key;
+      const s3FileKeyEncoded = obj.Records[0].s3.object.key;
+      const s3FileKey = decodeURIComponent(s3FileKeyEncoded);
+      console.log(s3FileKey);
 
       const fileFromDb = await this.fileService.findFileByS3Path(s3FileKey);
       if (!fileFromDb) {
@@ -67,10 +69,8 @@ export class ConsumerService {
         userEmail: fileFromDb.userEmail,
         uploadedAt: fileFromDb.uploadedAt.toISOString(),
       });
-      // console.log(data);
     } catch (e) {
       console.log('error handling message', e);
     }
-    // use the data and consume it the way you want //
   }
 }
