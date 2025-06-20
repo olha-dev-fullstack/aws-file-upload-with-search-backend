@@ -6,6 +6,8 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { FileService } from './services/file.service';
 import { FileController } from './controllers/file.controller';
 import { PrismaService } from './prisma/prisma.service';
+import { ConsumerModule } from './sqs-consumer/consumer.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { PrismaService } from './prisma/prisma.service';
       isGlobal: true,
     }),
     FileUploadModule,
+    PrismaModule,
+    ConsumerModule,
   ],
   controllers: [AppController, FileController],
   providers: [AppService, FileService, PrismaService],
